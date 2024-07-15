@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김천고등학교 학생 관리 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        input[type="datetime-local"] {
+            width: 200px;
+        }
+        input[type="text"] {
+            width: 150px;
+        }
+        table {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
+        <h1>김천고등학교 외출 관리 시스템</h1>
+    </header>
+    <div id="management-container">
+        <form method="POST" action="/manage">
+            <input type="text" name="search_name" placeholder="학생 이름 검색">
+            <button type="submit">검색</button>
+        </form>
+        <form method="GET" action="/manage">
+            <label for="class-select">반 선택:</label>
+            <select name="class" id="class-select" onchange="this.form.submit()">
+                <option value="">전체</option>
+                {% for class in classes %}
+                <option value="{{ class }}" {% if selected_class == class %}selected{% endif %}>{{ class }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>반</th>
+                    <th>바코드</th>
+                    <th>외출 시작 시간</th>
+                    <th>외출 종료 시간</th>
+                    <th>작업</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <form action="/update-student" method="POST">
+                        <td>{{ student.name }}</td>
+                        <td>{{ student['class'] }}</td>
+                        <td>{{ student.barcode }}</td>
+                        <td>
+                            <input type="hidden" name="barcode" value="{{ student.barcode }}">
+                            <input type="datetime-local" name="out_datetime" value="{{ student['out date/time']|replace(' ', 'T') }}">
+                        </td>
+                        <td>
+                            <input type="datetime-local" name="in_datetime" value="{{ student['in date/time']|replace(' ', 'T') }}">
+                        </td>
+                        <td>
+                            <button type="submit">저장</button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

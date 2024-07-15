@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>외출 요청 관리 - 김천고등학교 외출 관리 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
+        <h1>외출 요청 관리</h1>
+        <button class="btn" onclick="window.location.href='{{ url_for('class_page', class_name=session['user_class']) }}'">반 학생 관리</button>
+        <a href="{{ url_for('logout') }}">로그아웃</a>
+    </header>
+    <div id="requests">
+        <table>
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>반</th>
+                    <th>바코드</th>
+                    <th>외출 시작 시간</th>
+                    <th>외출 종료 시간</th>
+                    <th>승인</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.student_name }}</td>
+                    <td>{{ request.student_class }}</td>
+                    <td>{{ request.barcode }}</td>
+                    <td>{{ request.out_time }}</td>
+                    <td>{{ request.in_time }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('approve_request', request_id=request.id) }}">
+                            <button type="submit" class="btn">승인</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

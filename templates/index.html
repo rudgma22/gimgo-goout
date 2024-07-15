@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김천고등학교 외출 관리 시스템</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
+        <h1>김천고등학교 외출 관리 시스템</h1>
+    </header>
+    <div id="scanner-container">
+        <video id="video" autoplay></video>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <div id="result"></div>
+        <button id="scan-button">바코드 스캔 시작</button>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

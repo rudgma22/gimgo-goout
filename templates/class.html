@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김천고등학교 {{ class_name }}반 외출 관리</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
+        <h1>{{ class_name }}반 외출 관리</h1>
+        <a href="{{ url_for('logout') }}">로그아웃</a>
+        <button class="btn" onclick="window.location.href='{{ url_for('manage_requests') }}'">외출 신청 관리</button>
+    </header>
+    <div id="student-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>바코드</th>
+                    <th>외출 시작 시간</th>
+                    <th>외출 종료 시간</th>
+                    <th>작업</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <form action="/class/{{ class_name }}" method="POST">
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.barcode }}</td>
+                        <td>
+                            <input type="hidden" name="barcode" value="{{ student.barcode }}">
+                            <input type="datetime-local" name="out_datetime" value="{{ student['out date/time']|replace(' ', 'T') }}">
+                        </td>
+                        <td>
+                            <input type="datetime-local" name="in_datetime" value="{{ student['in date/time']|replace(' ', 'T') }}">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn">저장</button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
