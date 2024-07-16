@@ -4,81 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 - 김천고등학교 외출 관리 시스템</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script>
-        function showLogin(role) {
-            document.getElementById('role-selection').style.display = 'none';
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('role').value = role;
-            document.getElementById('form-title').innerText = role === 'student' ? '학생 로그인' : '선생님/관리자 로그인';
+    <style>
+        /* Reset some default browser styles */
+        body, h1, h2, ul, li, input, button, form, div {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
 
-        function handleSubmit(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const role = document.getElementById('role').value;
-
-            const tempForm = document.createElement('form');
-            tempForm.method = 'POST';
-            tempForm.action = event.target.action;
-
-            const usernameInput = document.createElement('input');
-            usernameInput.type = 'hidden';
-            usernameInput.name = 'username';
-            usernameInput.value = username;
-            tempForm.appendChild(usernameInput);
-
-            const passwordInput = document.createElement('input');
-            passwordInput.type = 'hidden';
-            passwordInput.name = 'password';
-            passwordInput.value = password;
-            tempForm.appendChild(passwordInput);
-
-            const roleInput = document.createElement('input');
-            roleInput.type = 'hidden';
-            roleInput.name = 'role';
-            roleInput.value = role;
-            tempForm.appendChild(roleInput);
-
-            document.body.appendChild(tempForm);
-            tempForm.submit();
+        /* Overall page styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            background-color: #ffffff;
+            padding-top: 50px;
         }
-    </script>
+
+        /* Header styling */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header img {
+            width: 100px;
+            height: auto;
+        }
+
+        header h1 {
+            margin-top: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* Content container styling */
+        .contents {
+            width: 400px;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Tabs styling */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+            position: relative;
+        }
+
+        .tab {
+            cursor: pointer;
+            padding: 10px 20px;
+            text-align: center;
+            transition: color 0.3s;
+            position: relative;
+            color: #ccc;
+        }
+
+        .tab.on {
+            color: #007bff;
+        }
+
+        .tab.green.on {
+            color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .tab::after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #007bff;
+            transition: width 0.3s;
+        }
+
+        .tab.on::after {
+            width: 100%;
+        }
+
+        .tab.green.on::after {
+            background-color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .tab-divider {
+            width: 1px;
+            background-color: #ccc;
+            height: 16px;
+            margin: auto 10px;
+        }
+
+        .check_text {
+            font-size: 16px;
+        }
+
+        /* Form styling */
+        .login_form {
+            margin-bottom: 20px;
+        }
+
+        .id_input, .password_input {
+            margin-bottom: 15px;
+        }
+
+        .input_normal {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+        }
+
+        .input_normal:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .green .input_normal:focus {
+            border-color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .button_normal {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button_normal:hover {
+            background-color: #0056b3;
+        }
+
+        .green .button_normal {
+            background-color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .green .button_normal:hover {
+            background-color: #6b8e23; /* 연두색 */
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
-        <h1>김천고등학교 외출 관리 시스템</h1>
-    </header>
-    <div id="login-container">
-        <div id="role-selection">
-            <button class="btn" onclick="showLogin('student')">학생 로그인</button>
-            <button class="btn" onclick="showLogin('teacher')">선생님/관리자 로그인</button>
+<header>
+    <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
+    <h1>김천고등학교 외출 관리 시스템</h1>
+</header>
+<div class="contents">
+    <ul class="tabs">
+        <li class="tab on" data-color="blue">
+            <div class="check_text">학생 로그인</div>
+        </li>
+        <div class="tab-divider"></div>
+        <li class="tab" data-color="green">
+            <div class="check_text">교사 로그인</div>
+        </li>
+    </ul>
+    <form class="login_form">
+        <div class="id_input">
+            <input class="input_normal" type="text" id="id" placeholder="아이디를 입력하세요">
         </div>
-        <div id="login-form" style="display:none;">
-            <h2 id="form-title"></h2>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            <form onsubmit="handleSubmit(event)">
-                <input type="hidden" id="role" name="role">
-                <label for="username">아이디:</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">비밀번호:</label>
-                <input type="password" id="password" name="password" required>
-                <button class="btn" type="submit">로그인</button>
-            </form>
-            <div class="register-link">
-                <p>계정이 없으신가요?</p>
-                <a href="{{ url_for('register') }}">회원가입</a>
-            </div>
+        <div class="password_input">
+            <input class="input_normal" type="password" id="pw" placeholder="비밀번호를 입력하세요" autocomplete="off">
         </div>
-    </div>
+        <button class="button_normal" type="button">로그인</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelector('.contents');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                tabs.forEach(t => t.classList.remove('on', 'green'));
+                tab.classList.add('on');
+                if (tab.getAttribute('data-color') === 'green') {
+                    contents.classList.add('green');
+                    tabs.forEach(t => t.classList.add('green'));
+                } else {
+                    contents.classList.remove('green');
+                    tabs.forEach(t => t.classList.remove('green'));
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
