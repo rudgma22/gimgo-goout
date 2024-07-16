@@ -5,49 +5,243 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 - 김천고등학교 외출 관리 시스템</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Reset some default browser styles */
+        body, h1, h2, ul, li, input, button, form, div {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Overall page styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            background-color: #ffffff;
+            padding-top: 50px;
+        }
+
+        /* Header styling */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header img {
+            width: 100px;
+            height: auto;
+        }
+
+        header h1 {
+            margin-top: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* Content container styling */
+        .contents {
+            width: 400px;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Tabs styling */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+            position: relative;
+        }
+
+        .tab {
+            cursor: pointer;
+            padding: 10px 20px;
+            text-align: center;
+            transition: color 0.3s;
+            position: relative;
+            color: #ccc;
+        }
+
+        .tab.on {
+            color: #007bff;
+        }
+
+        .tab.green.on {
+            color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .tab::after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #007bff;
+            transition: width 0.3s;
+        }
+
+        .tab.on::after {
+            width: 100%;
+        }
+
+        .tab.green.on::after {
+            background-color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .tab-divider {
+            width: 1px;
+            background-color: #ccc;
+            height: 16px;
+            margin: auto 10px;
+        }
+
+        .check_text {
+            font-size: 16px;
+        }
+
+        /* Form styling */
+        .register_form {
+            margin-bottom: 20px;
+        }
+
+        .input_field {
+            margin-bottom: 15px;
+        }
+
+        .input_normal {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+        }
+
+        .input_normal:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .green .input_normal:focus {
+            border-color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .button_normal {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button_normal:hover {
+            background-color: #0056b3;
+        }
+
+        .green .button_normal {
+            background-color: #8BC34A; /* 밝은 연두색 */
+        }
+
+        .green .button_normal:hover {
+            background-color: #6b8e23; /* 연두색 */
+        }
+    </style>
     <script>
         function showRegister(role) {
-            document.getElementById('role-selection').style.display = 'none';
-            document.getElementById('register-form').style.display = 'block';
+            document.getElementById('student-fields').style.display = role === 'student' ? 'block' : 'none';
+            document.getElementById('teacher-fields').style.display = role === 'teacher' ? 'block' : 'none';
             document.getElementById('role').value = role;
-            document.getElementById('form-title').innerText = role === 'student' ? '학생 회원가입' : '선생님/관리자 회원가입';
 
-            const studentFields = document.getElementById('student-fields');
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelector('.contents');
+            tabs.forEach(t => t.classList.remove('on', 'green'));
+
             if (role === 'student') {
-                studentFields.style.display = 'block';
+                document.querySelector('.tab[data-role="student"]').classList.add('on');
+                contents.classList.remove('green');
             } else {
-                studentFields.style.display = 'none';
+                document.querySelector('.tab[data-role="teacher"]').classList.add('on', 'green');
+                contents.classList.add('green');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    showRegister(tab.getAttribute('data-role'));
+                });
+            });
+        });
     </script>
 </head>
 <body>
-    <header>
-        <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
-        <h1>김천고등학교 외출 관리 시스템</h1>
-    </header>
-    <div id="register-container">
-        <div id="role-selection">
-            <button class="btn" onclick="showRegister('student')">학생 회원가입</button>
-            <button class="btn" onclick="showRegister('teacher')">선생님/관리자 회원가입</button>
+<header>
+    <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
+    <h1>김천고등학교 외출 관리 시스템</h1>
+</header>
+<div class="contents">
+    <ul class="tabs">
+        <li class="tab on" data-role="student">
+            <div class="check_text">학생 회원가입</div>
+        </li>
+        <div class="tab-divider"></div>
+        <li class="tab" data-role="teacher">
+            <div class="check_text">교사 회원가입</div>
+        </li>
+    </ul>
+    <form class="register_form" method="POST" action="/register">
+        <input type="hidden" id="role" name="role" value="student">
+
+        <div class="input_field">
+            <input class="input_normal" type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
         </div>
-        <div id="register-form" style="display:none;">
-            <h2 id="form-title"></h2>
-            <form method="POST">
-                <input type="hidden" id="role" name="role">
-                <label for="username">아이디:</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">비밀번호:</label>
-                <input type="password" id="password" name="password" required>
-                <label for="class">반:</label>
-                <input type="text" id="class" name="class" required>
-                <div id="student-fields" style="display:none;">
-                    <label for="barcode">바코드:</label>
-                    <input type="text" id="barcode" name="barcode">
-                </div>
-                <button class="btn" type="submit">회원가입</button>
-            </form>
+        <div class="input_field">
+            <input class="input_normal" type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
         </div>
-    </div>
+
+        <div id="student-fields">
+            <div class="input_field">
+                <input class="input_normal" type="text" id="student_name" name="student_name" placeholder="이름을 입력하세요">
+            </div>
+            <div class="input_field">
+                <input class="input_normal" type="text" id="grade" name="grade" placeholder="학년을 입력하세요">
+            </div>
+            <div class="input_field">
+                <input class="input_normal" type="text" id="class" name="class" placeholder="반을 입력하세요">
+            </div>
+            <div class="input_field">
+                <input class="input_normal" type="text" id="student_id" name="student_id" placeholder="번호를 입력하세요">
+            </div>
+            <div class="input_field">
+                <input class="input_normal" type="text" id="barcode" name="barcode" placeholder="바코드를 입력하세요">
+            </div>
+        </div>
+
+        <div id="teacher-fields" style="display: none;">
+            <div class="input_field">
+                <input class="input_normal" type="text" id="teacher_name" name="teacher_name" placeholder="이름을 입력하세요">
+            </div>
+            <div class="input_field">
+                <input class="input_normal" type="text" id="subject" name="subject" placeholder="담당 학년과 반을 입력하세요">
+            </div>
+        </div>
+
+        <button class="button_normal" type="submit">회원가입</button>
+    </form>
+</div>
 </body>
 </html>

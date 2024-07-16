@@ -54,7 +54,12 @@ def register():
         password = request.form.get('password')
         user_class = request.form.get('class')
         role = request.form.get('role')
+        student_name = request.form.get('student_name')
+        grade = request.form.get('grade')
+        student_id = request.form.get('student_id')
         barcode = request.form.get('barcode')
+        teacher_name = request.form.get('teacher_name')
+        subject = request.form.get('subject')
 
         if role == 'student' and not barcode:
             flash('학생은 바코드 정보를 입력해야 합니다.', 'error')
@@ -62,7 +67,14 @@ def register():
 
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
-        new_user = User(username=username, password=hashed_password, user_class=user_class, role=role, barcode=barcode)
+        new_user = User(
+            username=username,
+            password=hashed_password,
+            user_class=user_class,
+            role=role,
+            barcode=barcode
+        )
+
         db.session.add(new_user)
         db.session.commit()
 
@@ -174,7 +186,7 @@ def class_page(class_name):
 
         # 데이터프레임 갱신
         global dF
-        dF = load_students()
+        df = load_students()
 
         return redirect(url_for('class_page', class_name=class_name))
 

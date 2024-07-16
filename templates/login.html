@@ -174,15 +174,16 @@
             <div class="check_text">교사 로그인</div>
         </li>
     </ul>
-    <form class="login_form">
+    <form class="login_form" method="post" action="/login">
         <div class="id_input">
-            <input class="input_normal" type="text" id="id" placeholder="아이디를 입력하세요">
+            <input class="input_normal" type="text" name="username" placeholder="아이디를 입력하세요" required>
         </div>
         <div class="password_input">
-            <input class="input_normal" type="password" id="pw" placeholder="비밀번호를 입력하세요" autocomplete="off">
+            <input class="input_normal" type="password" name="password" placeholder="비밀번호를 입력하세요" required>
         </div>
-        <button class="button_normal" type="button">로그인</button>
+        <button class="button_normal" type="submit">로그인</button>
     </form>
+    <p>계정이 없으신가요? <a href="/register">회원가입</a></p>
 </div>
 
 <script>
@@ -207,3 +208,4 @@
 </script>
 </body>
 </html>
+
