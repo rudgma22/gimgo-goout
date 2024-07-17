@@ -4,161 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 - 김천고등학교 외출 관리 시스템</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        /* Reset some default browser styles */
-        body, h1, h2, ul, li, input, button, form, div {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Overall page styling */
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            background-color: #ffffff;
-            padding-top: 50px;
-        }
-
-        /* Header styling */
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        header img {
-            width: 100px;
-            height: auto;
-        }
-
-        header h1 {
-            margin-top: 10px;
-            font-size: 24px;
-            color: #333;
-        }
-
-        /* Content container styling */
-        .contents {
-            width: 400px;
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        /* Tabs styling */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #e5e5e5;
-            position: relative;
-        }
-
-        .tab {
-            cursor: pointer;
-            padding: 10px 20px;
-            text-align: center;
-            transition: color 0.3s;
-            position: relative;
-            color: #ccc;
-        }
-
-        .tab.on {
-            color: #007bff;
-        }
-
-        .tab.green.on {
-            color: #8BC34A; /* 밝은 연두색 */
-        }
-
-        .tab::after {
-            content: '';
-            display: block;
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #007bff;
-            transition: width 0.3s;
-        }
-
-        .tab.on::after {
-            width: 100%;
-        }
-
-        .tab.green.on::after {
-            background-color: #8BC34A; /* 밝은 연두색 */
-        }
-
-        .tab-divider {
-            width: 1px;
-            background-color: #ccc;
-            height: 16px;
-            margin: auto 10px;
-        }
-
-        .check_text {
-            font-size: 16px;
-        }
-
-        /* Form styling */
-        .register_form {
-            margin-bottom: 20px;
-        }
-
-        .input_field {
-            margin-bottom: 15px;
-        }
-
-        .input_normal {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #e5e5e5;
-            border-radius: 4px;
-        }
-
-        .input_normal:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        .green .input_normal:focus {
-            border-color: #8BC34A; /* 밝은 연두색 */
-        }
-
-        .button_normal {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .button_normal:hover {
-            background-color: #0056b3;
-        }
-
-        .green .button_normal {
-            background-color: #8BC34A; /* 밝은 연두색 */
-        }
-
-        .green .button_normal:hover {
-            background-color: #6b8e23; /* 연두색 */
-        }
-    </style>
+    <link rel="icon" href="{{ url_for('static', filename='songseol.png') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_test.css') }}">
     <script>
         function showRegister(role) {
             document.getElementById('student-fields').style.display = role === 'student' ? 'block' : 'none';
@@ -178,12 +25,54 @@
             }
         }
 
+        function updateClassOptions(gradeSelectId, classSelectId) {
+            const gradeSelect = document.getElementById(gradeSelectId);
+            const classSelect = document.getElementById(classSelectId);
+            const selectedGrade = gradeSelect.value;
+
+            // Clear existing options
+            classSelect.innerHTML = '<option value="" disabled selected>반을 선택하세요</option>';
+
+            if (selectedGrade === '기타') {
+                classSelect.style.display = 'none';
+                return;
+            } else {
+                classSelect.style.display = 'block';
+            }
+
+            let numberOfClasses = 0;
+            if (selectedGrade === '1') {
+                numberOfClasses = 8;
+            } else if (selectedGrade === '2') {
+                numberOfClasses = 10;
+            } else if (selectedGrade === '3') {
+                numberOfClasses = 7;
+            }
+
+            for (let i = 1; i <= numberOfClasses; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                classSelect.appendChild(option);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => {
                 tab.addEventListener('click', function () {
                     showRegister(tab.getAttribute('data-role'));
                 });
+            });
+
+            const gradeSelectStudent = document.getElementById('grade');
+            gradeSelectStudent.addEventListener('change', function () {
+                updateClassOptions('grade', 'class');
+            });
+
+            const gradeSelectTeacher = document.getElementById('teacher_grade');
+            gradeSelectTeacher.addEventListener('change', function () {
+                updateClassOptions('teacher_grade', 'teacher_class');
             });
         });
     </script>
@@ -218,10 +107,17 @@
                 <input class="input_normal" type="text" id="student_name" name="student_name" placeholder="이름을 입력하세요">
             </div>
             <div class="input_field">
-                <input class="input_normal" type="text" id="grade" name="grade" placeholder="학년을 입력하세요">
+                <select class="input_select" id="grade" name="grade">
+                    <option value="" disabled selected>학년을 선택하세요</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
             </div>
-            <div class="input_field">
-                <input class="input_normal" type="text" id="class" name="class" placeholder="반을 입력하세요">
+            <div class="input_field" id="class-container">
+                <select class="input_select" id="class" name="class">
+                    <option value="" disabled selected>반을 선택하세요</option>
+                </select>
             </div>
             <div class="input_field">
                 <input class="input_normal" type="text" id="student_id" name="student_id" placeholder="번호를 입력하세요">
@@ -236,7 +132,18 @@
                 <input class="input_normal" type="text" id="teacher_name" name="teacher_name" placeholder="이름을 입력하세요">
             </div>
             <div class="input_field">
-                <input class="input_normal" type="text" id="subject" name="subject" placeholder="담당 학년과 반을 입력하세요">
+                <select class="input_select" id="teacher_grade" name="teacher_grade">
+                    <option value="" disabled selected>담당 학년을 선택하세요</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+            <div class="input_field" id="teacher-class-container">
+                <select class="input_select" id="teacher_class" name="teacher_class">
+                    <option value="" disabled selected>담당 반을 선택하세요</option>
+                </select>
             </div>
         </div>
 
