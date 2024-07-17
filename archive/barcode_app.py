@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 
 # 엑셀 파일 경로
-excel_file_path = 'students.xlsx'
+excel_file_path = '../students.xlsx'
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///log.db'

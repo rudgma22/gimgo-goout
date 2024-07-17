@@ -37,6 +37,7 @@ def register():
             barcode=barcode
         )
 
+        # 데이터베이스 작업을 애플리케이션 컨텍스트 내에서 수행
         db.session.add(new_user)
         db.session.commit()
 

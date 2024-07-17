@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 # 엑셀 파일 경로
-excel_file_path = 'students.xlsx'
+excel_file_path = '../students.xlsx'
 
 
 def load_students():

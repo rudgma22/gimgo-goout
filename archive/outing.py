@@ -1,11 +1,11 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session
-from models import db, User, OutingRequest
+from archive.models import db, User, OutingRequest
 from openpyxl import load_workbook
 import pandas as pd
 
 outing_bp = Blueprint('outing', __name__)
 
-excel_file_path = 'students.xlsx'
+excel_file_path = '../students.xlsx'
 
 def load_students():
     """엑셀 파일을 읽고 데이터프레임을 반환합니다."""
