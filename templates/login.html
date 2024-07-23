@@ -14,15 +14,15 @@
 </header>
 <div class="contents">
     <ul class="tabs">
-        <li class="tab on" data-color="blue">
+        <li class="tab on" data-color="blue" id="student-tab">
             <div class="check_text">학생 로그인</div>
         </li>
         <div class="tab-divider"></div>
-        <li class="tab" data-color="green">
+        <li class="tab" data-color="green" id="teacher-tab">
             <div class="check_text">교사 로그인</div>
         </li>
     </ul>
-    <form class="login_form" method="post" action="/login">
+    <form id="student-form" class="login_form" method="post" action="{{ url_for('login.login_student') }}">
         <div class="id_input">
             <input class="input_normal" type="text" name="username" placeholder="아이디를 입력하세요" required>
         </div>
@@ -31,29 +31,39 @@
         </div>
         <button class="button_normal" type="submit">로그인</button>
     </form>
-    <p>계정이 없으신가요? <a href="/register">회원가입</a></p>
+    <form id="teacher-form" class="login_form" method="post" action="{{ url_for('login.login_teacher') }}" style="display:none;">
+        <div class="id_input">
+            <input class="input_normal" type="text" name="username" placeholder="아이디를 입력하세요" required>
+        </div>
+        <div class="password_input">
+            <input class="input_normal" type="password" name="password" placeholder="비밀번호를 입력하세요" required>
+        </div>
+        <button class="button_normal" type="submit">로그인</button>
+    </form>
+    <p>계정이 없으신가요? <a href="{{ url_for('register.register') }}">회원가입</a></p>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const tabs = document.querySelectorAll('.tab');
-        const contents = document.querySelector('.contents');
+        const studentTab = document.getElementById('student-tab');
+        const teacherTab = document.getElementById('teacher-tab');
+        const studentForm = document.getElementById('student-form');
+        const teacherForm = document.getElementById('teacher-form');
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function () {
-                tabs.forEach(t => t.classList.remove('on', 'green'));
-                tab.classList.add('on');
-                if (tab.getAttribute('data-color') === 'green') {
-                    contents.classList.add('green');
-                    tabs.forEach(t => t.classList.add('green'));
-                } else {
-                    contents.classList.remove('green');
-                    tabs.forEach(t => t.classList.remove('green'));
-                }
-            });
+        studentTab.addEventListener('click', function () {
+            studentTab.classList.add('on');
+            teacherTab.classList.remove('on');
+            studentForm.style.display = 'block';
+            teacherForm.style.display = 'none';
+        });
+
+        teacherTab.addEventListener('click', function () {
+            teacherTab.classList.add('on');
+            studentTab.classList.remove('on');
+            teacherForm.style.display = 'block';
+            studentForm.style.display = 'none';
         });
     });
 </script>
 </body>
 </html>
-

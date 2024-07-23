@@ -97,13 +97,12 @@ def register():
 
     return render_template('register.html')
 
-@login_bp.route('/login', methods=['GET', 'POST'])
-def login():
+@login_bp.route('/login/student', methods=['GET', 'POST'])
+def login_student():
     if request.method == 'POST':
         user_id = request.form.get('username')
         user_pw = request.form.get('password')
-        role = request.form.get('role')
-        user = User.query.filter_by(user_id=user_id, role=role).first()
+        user = User.query.filter_by(user_id=user_id, role='student').first()
 
         if user and check_password_hash(user.user_pw, user_pw):
             session['user_id'] = user.user_id
@@ -111,16 +110,34 @@ def login():
             session['role'] = user.role
 
             # 세션 데이터 출력
-            print(
-                f"Session Data: user_id={session['user_id']}, user_class={session['user_class']}, role={session['role']}")
+            print(f"Session Data: user_id={session['user_id']}, user_class={session['user_class']}, role={session['role']}")
 
-            if role == 'student':
-                return redirect(url_for('outing.student_home'))
-            else:
-                return redirect(url_for('outing.class_page', class_name=user.student_class))
+            return redirect(url_for('outing.student_home'))
 
         flash('아이디 또는 비밀번호가 올바르지 않습니다.', 'error')
-        return redirect(url_for('login.login'))
+        return redirect(url_for('login.login_student'))
+
+    return render_template('login.html')
+
+@login_bp.route('/login/teacher', methods=['GET', 'POST'])
+def login_teacher():
+    if request.method == 'POST':
+        user_id = request.form.get('username')
+        user_pw = request.form.get('password')
+        user = User.query.filter_by(user_id=user_id, role='teacher').first()
+
+        if user and check_password_hash(user.user_pw, user_pw):
+            session['user_id'] = user.user_id
+            session['user_class'] = user.student_class
+            session['role'] = user.role
+
+            # 세션 데이터 출력
+            print(f"Session Data: user_id={session['user_id']}, user_class={session['user_class']}, role={session['role']}")
+
+            return redirect(url_for('outing.class_page', class_name=user.student_class))
+
+        flash('아이디 또는 비밀번호가 올바르지 않습니다.', 'error')
+        return redirect(url_for('login.login_teacher'))
 
     return render_template('login.html')
 
@@ -129,25 +146,24 @@ def logout():
     session.pop('user_id', None)
     session.pop('user_class', None)
     session.pop('role', None)
-    return redirect(url_for('login.login'))
+    return redirect(url_for('login.login_student'))
 
 @login_bp.route('/', methods=['GET'])
 def home_page():
     if 'user_id' in session:
         # 세션 데이터 출력
-        print(
-            f"Home Page Session Data: user_id={session['user_id']}, user_class={session['user_class']}, role={session['role']}")
+        print(f"Home Page Session Data: user_id={session['user_id']}, user_class={session['user_class']}, role={session['role']}")
 
         if session['role'] == 'student':
             return redirect(url_for('outing.student_home'))
         else:
             return redirect(url_for('outing.class_page', class_name=session['user_class']))
-    return redirect(url_for('login.login'))
+    return redirect(url_for('login.login_student'))
 
 @outing_bp.route('/student_home', methods=['GET'])
 def student_home():
     if 'user_id' not in session or session['role'] != 'student':
-        return redirect(url_for('login.login'))
+        return redirect(url_for('login.login_student'))
 
     student = User.query.filter_by(user_id=session['user_id']).first()
     return render_template('student_home.html', student=student)
@@ -155,7 +171,7 @@ def student_home():
 @outing_bp.route('/request_outing', methods=['POST'])
 def request_outing():
     if 'user_id' not in session or session['role'] != 'student':
-        return redirect(url_for('login.login'))
+        return redirect(url_for('login.login_student'))
 
     student = User.query.filter_by(user_id=session['user_id']).first()
     out_time = request.form.get('out_time').replace('T', ' ')
@@ -181,7 +197,7 @@ def class_page(class_name):
     global df  # global 선언이 df 변수 사용 전에 위치하도록 이동
 
     if 'user_id' not in session or session['role'] != 'teacher':
-        return redirect(url_for('login.login'))
+        return redirect(url_for('login.login_teacher'))
 
     filtered_df = df[df['class'] == class_name]
     if request.method == 'POST':
@@ -212,7 +228,7 @@ def class_page(class_name):
 @outing_bp.route('/manage_requests', methods=['GET'])
 def manage_requests():
     if 'user_id' not in session or session['role'] != 'teacher':
-        return redirect(url_for('login.login'))
+        return redirect(url_for('login.login_teacher'))
 
     user_class = session['user_class']
     requests = OutingRequest.query.filter_by(student_class=user_class, approved=False).all()
@@ -223,7 +239,7 @@ def approve_request(request_id):
     global df  # global 선언이 df 변수 사용 전에 위치하도록 이동
 
     if 'user_id' not in session or session['role'] != 'teacher':
-        return redirect(url_for('login.login'))
+        return redirect(url_for('login.login_teacher'))
 
     outing_request = OutingRequest.query.get(request_id)
     if outing_request:
@@ -249,7 +265,7 @@ def approve_request(request_id):
     return redirect(url_for('outing.manage_requests'))
 
 app.register_blueprint(register_bp)
-app.register_blueprint(login_bp)
+app.register_blueprint(login_bp, url_prefix='/')
 app.register_blueprint(outing_bp)
 
 if __name__ == '__main__':

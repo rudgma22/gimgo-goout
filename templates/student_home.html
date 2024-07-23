@@ -9,15 +9,16 @@
 <body>
     <header>
         <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
-        <h1>{{ session['username'] }}님, 환영합니다!</h1>
+        <h1>{{ session['user_id'] }}님, 환영합니다!</h1>
+        <a href="{{ url_for('login.logout') }}">로그아웃</a>
     </header>
     <div id="student-info">
         <p>이름: {{ student.name }}</p>
-        <p>반: {{ student.class }}</p>
+        <p>반: {{ student.student_class }}</p>
         <p>바코드: {{ student.barcode }}</p>
     </div>
     <div id="outing-request">
-        <form method="POST" action="{{ url_for('request_outing') }}">
+        <form method="POST" action="{{ url_for('outing.request_outing') }}">
             <label for="out_time">외출 시작 시간:</label>
             <input type="datetime-local" id="out_time" name="out_time" required>
             <label for="in_time">외출 종료 시간:</label>
