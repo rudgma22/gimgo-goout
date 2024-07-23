@@ -41,6 +41,8 @@
                         {% if request.approved %}승인됨{% else %}대기중{% endif %}
                     </div>
                 </li>
+                {% else %}
+                <li class="outing-item">외출 신청 내역이 없습니다.</li>
                 {% endfor %}
             </ul>
         </div>

@@ -180,7 +180,7 @@ def request_outing():
 
     outing_request = OutingRequest(
         student_id=student.id,
-        student_name=student.user_id,
+        student_name=student.name,
         student_class=student.student_class,
         barcode=student.barcode,
         out_time=out_time,
