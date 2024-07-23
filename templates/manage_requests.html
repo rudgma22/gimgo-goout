@@ -31,47 +31,17 @@
         header {
             text-align: center;
             margin-bottom: 20px;
-            position: relative;
-            width: 100%;
-            padding: 10px;
-            background-color: #f5f5f5;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         header img {
             width: 100px;
             height: auto;
-            vertical-align: middle;
         }
 
         header h1 {
             margin-top: 10px;
             font-size: 24px;
             color: #333;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        header .logout-container {
-            position: absolute;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-        }
-
-        header .button_normal {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        header .button_normal:hover {
-            background-color: #0056b3;
         }
 
         /* Content container styling */
@@ -120,17 +90,38 @@
         .button_normal:hover {
             background-color: #45a049;
         }
+
+        /* Logout button styling */
+        .logout-container {
+            margin-top: 20px;
+            text-align: right;
+            width: 100%;
+        }
+
+        .logout-container a {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .logout-container a:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <header>
         <img src="{{ url_for('static', filename='KakaoTalk_20240524_192806365.png') }}" alt="김천고등학교 로고">
         <h1>{{ session['user_class'] }}반 외출 요청 관리</h1>
-        <div class="logout-container">
-            <a href="{{ url_for('login.logout') }}" class="button_normal">로그아웃</a>
-        </div>
     </header>
     <div class="contents">
+        <div class="logout-container">
+            <a href="{{ url_for('login.logout') }}">로그아웃</a>
+        </div>
         <table>
             <thead>
                 <tr>
