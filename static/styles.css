@@ -1,107 +1,152 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    text-align: center;
+/* Reset some default browser styles */
+body, h1, h2, ul, li, input, button, form, div, select {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
+/* Overall page styling */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: #ffffff;
+    padding-top: 50px;
+}
+
+/* Header styling */
 header {
-    background-color: #fff;
-    padding: 20px 0;
-    border-bottom: 1px solid #ddd;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 header img {
-    width: 80px;
+    width: 100px;
     height: auto;
-    display: block;
-    margin: 0 auto;
 }
 
-h1 {
-    color: #444;
-    margin: 10px 0;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 4px #999;
-    margin: 10px;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-.btn:active {
-    background-color: #0056b3;
-    box-shadow: 0 2px #666;
-    transform: translateY(2px);
-}
-
-#login-container, #register-container, #student-list, #requests {
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    text-align: left;
-}
-
-#login-container form, #register-container form {
-    display: flex;
-    flex-direction: column;
-}
-
-#login-container label, #register-container label {
+header h1 {
     margin-top: 10px;
-    text-align: left;
+    font-size: 24px;
+    color: #333;
 }
 
-#login-container input, #register-container input, table input {
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: calc(100% - 22px); /* Border width 고려 */
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table th, table td {
-    padding: 10px;
-    border: 1px solid #ddd;
+/* Content container styling */
+.contents {
+    width: 400px;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     text-align: center;
 }
 
-.alert {
-    padding: 10px;
+/* Tabs styling */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+    position: relative;
+}
+
+.tab {
+    cursor: pointer;
+    padding: 10px 20px;
+    text-align: center;
+    transition: color 0.3s;
+    position: relative;
+    color: #ccc;
+}
+
+.tab.on {
+    color: #007bff;
+}
+
+.tab.green.on {
+    color: #8BC34A; /* 밝은 연두색 */
+}
+
+.tab::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #007bff;
+    transition: width 0.3s;
+}
+
+.tab.on::after {
+    width: 100%;
+}
+
+.tab.green.on::after {
+    background-color: #8BC34A; /* 밝은 연두색 */
+}
+
+.tab-divider {
+    width: 1px;
+    background-color: #ccc;
+    height: 16px;
+    margin: auto 10px;
+}
+
+.check_text {
+    font-size: 16px;
+}
+
+/* Form styling */
+.login_form {
+    margin-bottom: 20px;
+}
+
+.id_input, .password_input {
     margin-bottom: 15px;
-    border-radius: 5px;
 }
 
-.alert.error {
-    background-color: #f8d7da;
-    color: #721c24;
+.input_normal {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
 }
 
-.alert.success {
-    background-color: #d4edda;
-    color: #155724;
+.input_normal:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.green .input_normal:focus {
+    border-color: #8BC34A; /* 밝은 연두색 */
+}
+
+.button_normal {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button_normal:hover {
+    background-color: #0056b3;
+}
+
+.green .button_normal {
+    background-color: #8BC34A; /* 밝은 연두색 */
+}
+
+.green .button_normal:hover {
+    background-color: #6b8e23; /* 연두색 */
 }

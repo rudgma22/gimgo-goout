@@ -134,7 +134,7 @@ def login_teacher():
             # 세션 데이터 출력
             print(f"Session Data: user_id={session['user_id']}, user_class={session['user_class']}, role={session['role']}")
 
-            return redirect(url_for('outing.class_page', class_name=user.student_class))
+            return redirect(url_for('outing.manage_requests'))
 
         flash('아이디 또는 비밀번호가 올바르지 않습니다.', 'error')
         return redirect(url_for('login.login_teacher'))

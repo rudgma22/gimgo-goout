@@ -49,12 +49,14 @@
         const teacherTab = document.getElementById('teacher-tab');
         const studentForm = document.getElementById('student-form');
         const teacherForm = document.getElementById('teacher-form');
+        const contents = document.querySelector('.contents');
 
         studentTab.addEventListener('click', function () {
             studentTab.classList.add('on');
             teacherTab.classList.remove('on');
             studentForm.style.display = 'block';
             teacherForm.style.display = 'none';
+            contents.classList.remove('green');
         });
 
         teacherTab.addEventListener('click', function () {
@@ -62,6 +64,7 @@
             studentTab.classList.remove('on');
             teacherForm.style.display = 'block';
             studentForm.style.display = 'none';
+            contents.classList.add('green');
         });
     });
 </script>
