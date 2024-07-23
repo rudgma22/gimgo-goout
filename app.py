@@ -166,7 +166,8 @@ def student_home():
         return redirect(url_for('login.login_student'))
 
     student = User.query.filter_by(user_id=session['user_id']).first()
-    return render_template('student_home.html', student=student)
+    outing_requests = OutingRequest.query.filter_by(student_id=student.id).all()
+    return render_template('student_home.html', student=student, outing_requests=outing_requests)
 
 @outing_bp.route('/request_outing', methods=['POST'])
 def request_outing():
