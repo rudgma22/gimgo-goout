@@ -93,7 +93,7 @@ def register():
         db.session.commit()
 
         flash('회원가입이 완료되었습니다. 이제 로그인하세요.', 'success')
-        return redirect(url_for('login.login'))
+        return redirect(url_for('login.login_student'))
 
     return render_template('register.html')
 
